@@ -1,0 +1,7 @@
+<mat-spinner mode="indeterminate">
+</mat-spinner>
+
+<span *ngIf="loaderMessage$ | async as message"
+      class="message-loader fxFlexbox fxLayoutRow fxLayoutAlignStartCenter fxLayoutGap10">
+  <span>{{message}}</span>
+</span>

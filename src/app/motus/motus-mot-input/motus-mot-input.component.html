@@ -1,0 +1,14 @@
+<div class="fxFlexbox fxLayoutRow fxLayoutAlignCenterCenter fxLayoutGap20">
+  <button (click)="onResetClickHandler($event)" *ngIf="active" color="primary" mat-stroked-button>
+    Réinitialiser
+  </button>
+  <div class="mot-input">
+    <input #inputElement *ngFor="let letter of motAsArray; let i = index" [id]="validated ? '' : INPUT_MOT_LETTRE_ID_PREFIX+(i+1)"
+           [ngClass]="validityClasses[i]"
+           readonly
+           type="text"/>
+  </div>
+  <button (click)="onValiderClickHandler($event)" *ngIf="active" color="primary" mat-raised-button [disabled]="validationPending$ | async">
+    Valider
+  </button>
+</div>

@@ -1,0 +1,19 @@
+<form (ngSubmit)="onLoginSubmitted($event)" [formGroup]="loginForm" class="fxFlexbox fxLayoutColumn">
+  <mat-form-field>
+    <mat-label>Identifiant</mat-label>
+    <input [formControl]="loginFC" id="loginInput" matInput placeholder="Identifiant" type="text"/>
+    <mat-error *ngIf="loginFC.hasError('required')">L'identifiant est obligatoire</mat-error>
+    <mat-error *ngIf="loginFC.hasError('loginOrPasswordInvalid')">L'identifiant ou le mot de passe est incorrect
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Mot de passe</mat-label>
+    <input [formControl]="passwordFC" id="passwordInput" matInput placeholder="Mot de passe" type="password"/>
+    <mat-error *ngIf="passwordFC.getError('required')">Le mot de passe est obligatoire</mat-error>
+  </mat-form-field>
+
+  <button color="primary" mat-raised-button type="submit">
+    Se connecter
+    <mat-progress-spinner *ngIf="submitPending"></mat-progress-spinner>
+  </button>
+</form>

@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .bouton-navigation.mat-ripple {
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    background: #FFF;
+    cursor: pointer;
+
+    span {
+      margin-bottom: 20px;
+    }
+
+    .mat-icon {
+      height: 48px;
+      width: 48px;
+      font-size: 48px;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  height: 100%;
+  mat-toolbar {
+    height: 64px;
+  }
+
+  mat-drawer-container {
+    height: calc(100% - 64px);
+    background: #EEEEEE;
+  }
+}

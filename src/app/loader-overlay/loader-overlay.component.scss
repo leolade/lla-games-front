@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(100,100,100,0.5);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .message-loader {
+    margin-top: 30px;
+    background: rgb(74, 88, 162);
+    color: #FFFFFF;
+    padding: 5px 10px;
+    border-radius: 10px;
+    opacity: 0.95;
+    font-size: 18px;
+    height: 18px;
+  }
+}

@@ -1,0 +1,24 @@
+<ng-container *ngIf="state != 'REGISTER'; else registerBlock">
+  <h2 mat-dialog-title>Se connecter</h2>
+  <mat-dialog-content>
+    <app-login (logged)="onLogged()">
+    </app-login>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button (click)="switchToRegister()" mat-stroked-button>
+      Pas encore connecté ? <b>Créer un compte</b>
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+<ng-template #registerBlock>
+  <h2 mat-dialog-title>Créer un compte</h2>
+  <mat-dialog-content>
+    <app-register>
+    </app-register>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button (click)="switchToLogin()" mat-stroked-button>
+      Vous avez déjà un compte ? <b>Connectez-vous</b>
+    </button>
+  </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,50 @@
+:host {
+  display: block;
+  height: 100%;
+
+  .main-flex-container {
+    height: 100%;
+  }
+
+  .simple-keyboard {
+    max-width: 600px;
+    margin-bottom: 15px;
+  }
+
+  app-motus-mot-input {
+    &:first-of-type {
+      margin-top: 15px;
+    }
+  }
+
+  @media screen and (max-width: 800px) and (min-width: 501px) {
+    .simple-keyboard {
+      max-width: 90%;
+    }
+  }
+
+  @media screen and (max-width: 501px) {
+    .simple-keyboard {
+      max-width: 100%;
+    }
+  }
+
+  .keyboard-flexbox {
+    width: 100%;
+  }
+
+  ::ng-deep {
+    .motus-lettre-absente {
+      background: rgba(169, 169, 169, 0.7);
+    }
+
+    .motus-lettre-mal-place {
+      background: RGBA(255,255,0,0.7);
+    }
+
+    .motus-lettre-bien-place {
+      background: RGBA(0, 255, 0, 0.7);
+    }
+  }
+
+}

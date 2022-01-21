@@ -1,0 +1,70 @@
+:host {
+  display: block;
+
+  button {
+    width: 110px;
+  }
+
+  @media screen and (max-width: 500px) {
+    button {
+      display: none;
+    }
+    .mot-input {
+      margin-right: 0px !important;
+    }
+  }
+
+
+  @media screen and (min-width: 800px) {
+    input {
+      font: 48px monospace;
+      width: 48px;
+    }
+  }
+
+  @media screen and (max-width: 800px) and (min-width: 601px) {
+    input {
+      font: 38px monospace;
+      width: 38px;
+    }
+  }
+
+  @media screen and (max-width: 600px) and (min-width: 501px) {
+    input {
+      font: 32px monospace;
+      width: 32px;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    input {
+      font: 32px monospace;
+      width: 32px;
+    }
+  }
+
+  input {
+    text-transform: capitalize;
+    text-align: center;
+    border: 1px solid black;
+    -webkit-appearance: none;
+    outline: none;
+    background: rgba(128, 128, 128, 0.7);
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+
+    &.well-placed-letter {
+      background: RGBA(0,255,0,0.7);
+    }
+
+    &.misplaced-letter {
+      background: RGBA(255,255,0,0.7);
+    }
+
+    &.bad-letter {
+      background: rgba(169, 169, 169, 1);
+    }
+  }
+}
