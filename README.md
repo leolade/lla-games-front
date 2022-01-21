@@ -34,3 +34,5 @@ Lancez le serveur
   ng serve
 ```
 
+## Demo
+http://www.game.leoladevie.fr/mot/daily
