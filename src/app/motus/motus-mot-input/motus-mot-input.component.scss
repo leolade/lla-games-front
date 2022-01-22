@@ -29,17 +29,17 @@
     }
   }
 
-  @media screen and (max-width: 600px) and (min-width: 501px) {
+  @media screen and (max-width: 600px) and (min-width: 231px) {
     input {
       font: 32px monospace;
       width: 32px;
     }
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 230px) {
     input {
-      font: 32px monospace;
-      width: 32px;
+      font: 24px monospace;
+      width: 24px;
     }
   }
 
