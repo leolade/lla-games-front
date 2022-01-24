@@ -12,9 +12,12 @@ import {
   ViewChildren
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MotusRoundPropositionValidationDto } from 'lla-party-games-dto/dist/motus-round-proposition-validation.dto';
 import { BehaviorSubject, interval, map, Observable, of, switchMap, take, throwError } from 'rxjs';
-import { LoaderService } from '../../core/loader.service';
+import { LocalUserService } from '../../core/local-user.service';
 import { MotRepositoryService } from '../../repositories/mot-repository.service';
+import { MotusRoundRepositoryService } from '../../repositories/motus-round-repository.service';
+import { UsersRepository } from '../../repositories/users-repository.service';
 
 @Component({
   selector: 'app-motus-mot-input',
@@ -34,6 +37,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
   @Input() motADeviner: string = '';
   @Input() validated: boolean = false;
   @Input() active: boolean = false;
+  @Input() roundId: string = '';
   @Output() validateEvent: EventEmitter<[string, string]> = new EventEmitter<[string, string]>();
 
   motLength: number = 0;
@@ -46,6 +50,8 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
   constructor(
     private cdk: ChangeDetectorRef,
     private motRepositoryService: MotRepositoryService,
+    private motusRoundRepositoryService: MotusRoundRepositoryService,
+    private localUserService: LocalUserService,
     private snackBar: MatSnackBar
   ) {
   }
@@ -73,7 +79,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
       .subscribe(
         {
           next: () => {
-            this.validate().subscribe(
+            this.makeProposition().subscribe(
               (motValide: string) => {
                 this.validateEvent.emit([this.getMot(), motValide]);
                 this.validationPendingSubject.next(false);
@@ -189,45 +195,56 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
     });
   }
 
-  /**
-   * Renvoie une chaine de caractères avec pour chaque lettre
-   * + si la lettre est bien placé
-   * - si la lettre n'est pas bien placé
-   * . si la lettre n'existe pas ou plus dans le mot
-   * @param mot
-   * @param motADeviner
-   * @private
-   */
+  private makeProposition(mot: string = this.getMot()): Observable<string> {
+    return this.motusRoundRepositoryService.makeProposition(
+      this.roundId, {
+        localUserUuid: this.localUserService.getLocalUser().uuid,
+        suggestWord: mot,
+      }
+    ).pipe(
+      map(
+        (propositionValide: MotusRoundPropositionValidationDto) => {
+          this.applyValidationClass(propositionValide.encodedValidation);
+          return propositionValide.encodedValidation;
+        }
+      )
+    )
+  }
+
   private validate(mot: string = this.getMot(), motADeviner: string = this.motADeviner): Observable<string> {
     return this.validateMot(mot, motADeviner)
       .pipe(
         map(
           (motValide: string) => {
-            const validityTempClasses = Array.from(motValide).map(
-              (symbol: string) => {
-                switch (symbol) {
-                  case '+':
-                    return this.LETTRE_BIEN_PLACE_CLASS;
-                  case '-':
-                    return this.LETTRE_MAL_PLACE_CLASS;
-                  case '.':
-                    return this.LETTRE_MAUVAISE_CLASS;
-                  default:
-                    return '';
-                }
-              }
-            );
-            this.validityClasses = new Array(this.motLength).fill("");
-
-            interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE).pipe(take(this.motLength)).subscribe(
-              (intervalIterator: number) => {
-                this.validityClasses[intervalIterator] = validityTempClasses[intervalIterator];
-                this.cdk.detectChanges();
-              }
-            );
+            this.applyValidationClass(motValide);
             return motValide;
           }
-        )
+        ),
       );
+  }
+
+  private applyValidationClass(motValide: string): void {
+    const validityTempClasses = Array.from(motValide).map(
+      (symbol: string) => {
+        switch (symbol) {
+          case '+':
+            return this.LETTRE_BIEN_PLACE_CLASS;
+          case '-':
+            return this.LETTRE_MAL_PLACE_CLASS;
+          case '.':
+            return this.LETTRE_MAUVAISE_CLASS;
+          default:
+            return '';
+        }
+      }
+    );
+    this.validityClasses = new Array(this.motLength).fill("");
+
+    interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE).pipe(take(this.motLength)).subscribe(
+      (intervalIterator: number) => {
+        this.validityClasses[intervalIterator] = validityTempClasses[intervalIterator];
+        this.cdk.detectChanges();
+      }
+    );
   }
 }

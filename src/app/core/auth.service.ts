@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { UserDto } from 'lla-party-games-dto/dist/user.dto';
 import { BehaviorSubject } from 'rxjs';
-import { UserDto } from '../../models/dtos/user.dto';
 
 @Injectable({
   providedIn: 'root'

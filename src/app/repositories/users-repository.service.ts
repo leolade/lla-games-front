@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConnectUserDto } from 'lla-party-games-dto/dist/connect-user.dto';
 import { CreateUserDto } from 'lla-party-games-dto/dist/create-user.dto';
+import { UserDto } from 'lla-party-games-dto/dist/user.dto';
 import { Observable, tap } from 'rxjs';
-import { ConnectUserDto } from '../../models/dtos/connect-user.dto';
-import { UserDto } from '../../models/dtos/user.dto';
 import { AuthService } from '../core/auth.service';
 import { HttpService } from './http.service';
 
@@ -36,5 +36,13 @@ export class UsersRepository extends HttpService {
 
   whoAmI(): Observable<UserDto> {
     return this.get<UserDto>('who-am-i')
+  }
+
+  getUnloggedToken(): Observable<string> {
+    return this.getText(`unlogged-token`);
+  }
+
+  getUnloggedUser(token: string): Observable<UserDto> {
+    return this.get(`unlogged-user/${token}`);
   }
 }

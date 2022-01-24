@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MotusGameDto } from 'lla-party-games-dto/dist/motus-game.dto';
+import { MotusRoundDto } from 'lla-party-games-dto/dist/motus-round.dto';
 import { Observable, switchMap, tap } from 'rxjs';
 import Keyboard from 'simple-keyboard';
 import { ArrayUtils } from 'type-script-utils-lla/dist/array.utils';
@@ -39,11 +40,11 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
   validations: boolean[] = Array(this.nbTry).fill(false);
   keyboard: Keyboard | undefined;
   nbTryActive: number = 0;
-  motADeviner$: Observable<string>;
+  round$: Observable<MotusRoundDto>;
   isWin: boolean = false;
   isLoose: boolean = false;
 
-  private motADevinerCourant?: string;
+  private roundCourant?: MotusRoundDto;
   private propositions: Map<number, [string, string]> = new Map()
 
   constructor(
@@ -54,14 +55,14 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
     private darkModeService: DarkModeService,
     private matDialog: MatDialog,
   ) {
-    this.motADeviner$ = this.motusGameRepositoryService.getDailyGame()
+    this.round$ = this.motusGameRepositoryService.getDailyGame()
       .pipe(
         switchMap(
           (game: MotusGameDto) => {
-            return this.motusRoundRepositoryService.getRoundWord(game.roundsId[0]);
+            return this.motusRoundRepositoryService.getRound(game.roundsId[0]);
           }
         ),
-        tap((motADeviner: string) => this.motADevinerCourant = motADeviner)
+        tap((round: MotusRoundDto) => this.roundCourant = round)
       );
   }
 
@@ -120,7 +121,7 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
           MotusResumeRoundComponent, {
             panelClass: ['dark-theme'],
             data: {
-              motADeviner: this.motADevinerCourant,
+              motADeviner: this.roundCourant?.motADeviner,
               reussi: this.isWin,
               validationsPropositions: Array.from(this.propositions.keys()).sort().map(
                 (nbTry: number) => {

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UserDto } from 'lla-party-games-dto/dist/user.dto';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { UserDto } from '../models/dtos/user.dto';
 import { AuthService } from './core/auth.service';
 import { AppLoader, LoaderService } from './core/loader.service';
 import { LoginOrchestratorComponent } from './login/login-orchestrator/login-orchestrator.component';
