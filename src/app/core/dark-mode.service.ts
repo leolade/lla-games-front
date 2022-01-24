@@ -8,14 +8,14 @@ export class DarkModeService {
 
   private darkModeSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.getDarkModeFromLocalStorage());
   darkMode$: Observable<boolean> = this.darkModeSubject.asObservable();
-  private DARK_MODE_LLA_GAME: string = 'DARK_MODE_LLA_GAME';
+  static DARK_MODE_LLA_GAME: string = 'LLA_GAME:DARK_MODE';
 
   constructor() {
   }
 
   updateDarkMode(value: boolean) {
     this.darkModeSubject.next(value);
-    localStorage.setItem(this.DARK_MODE_LLA_GAME, String(value))
+    localStorage.setItem(DarkModeService.DARK_MODE_LLA_GAME, String(value))
   }
 
   getDarkMode(): boolean {
@@ -23,6 +23,10 @@ export class DarkModeService {
   }
 
   private getDarkModeFromLocalStorage(): boolean {
-    return JSON.parse(localStorage.getItem(this.DARK_MODE_LLA_GAME) || String(window.matchMedia('(prefers-color-scheme: dark)').matches)) === true;
+    const localStorageItem: string | null = localStorage.getItem(DarkModeService.DARK_MODE_LLA_GAME);
+    if (localStorageItem === null) {
+      return JSON.parse(String(window.matchMedia('(prefers-color-scheme: dark)').matches));
+    }
+    return !!JSON.parse(localStorageItem as string);
   }
 }
