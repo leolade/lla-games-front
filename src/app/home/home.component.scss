@@ -19,5 +19,17 @@
       width: 48px;
       font-size: 48px;
     }
+
+    &.dark-theme {
+      background: #383839;
+
+      span {
+        color: white;
+      }
+
+      .mat-icon {
+        color: white;
+      }
+    }
   }
 }

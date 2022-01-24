@@ -12,6 +12,7 @@ import { MotusGameDto } from 'lla-party-games-dto/dist/motus-game.dto';
 import { Observable, switchMap, tap } from 'rxjs';
 import Keyboard from 'simple-keyboard';
 import { ArrayUtils } from 'type-script-utils-lla/dist/array.utils';
+import { DarkModeService } from '../../core/dark-mode.service';
 import { KeyboardEventService } from '../../keyboard-event.service';
 import { MotRepositoryService } from '../../repositories/mot-repository.service';
 import { MotusGameRepositoryService } from '../../repositories/motus-game-repository.service';
@@ -50,6 +51,7 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
     private motRepository: MotRepositoryService,
     private motusGameRepositoryService: MotusGameRepositoryService,
     private motusRoundRepositoryService: MotusRoundRepositoryService,
+    private darkModeService: DarkModeService,
     private matDialog: MatDialog,
   ) {
     this.motADeviner$ = this.motusGameRepositoryService.getDailyGame()
@@ -95,7 +97,8 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
       display: {
         '{bksp}': '←',
         '{enter}': '↵ Entrée'
-      }
+      },
+      theme: `hg-theme-default ${this.darkModeService.getDarkMode() ? 'dark-theme' : ''}`,
     });
   }
 

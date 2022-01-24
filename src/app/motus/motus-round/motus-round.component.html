@@ -1,4 +1,4 @@
-<div class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn main-flex-container">
+<div class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn main-flex-container" appDarkMode>
   <div appDarkMode>
     <ng-container  *ngIf="motADeviner$ | async as motADeviner">
       <app-motus-mot-input
@@ -12,6 +12,6 @@
     </ng-container>
   </div>
   <div class="fxFlexbox fxLayoutAlignCenterCenter keyboard-flexbox">
-    <div class="simple-keyboard"></div>
+    <div class="simple-keyboard" appDarkMode></div>
   </div>
 </div>

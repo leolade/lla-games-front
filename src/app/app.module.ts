@@ -21,6 +21,7 @@ import {MotusModule} from './motus/motus.module';
 import {LoaderOverlayComponent} from './loader-overlay/loader-overlay.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ReactiveFormsModule} from "@angular/forms";
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     MatRippleModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

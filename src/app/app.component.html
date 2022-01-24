@@ -1,4 +1,4 @@
-<mat-toolbar class="fxFlexbox fxLayoutAlignSpaceBetweenCenter" color="primary">
+<mat-toolbar class="fxFlexbox fxLayoutAlignSpaceBetweenCenter" color="primary" appDarkMode>
   <div class="fxFlexbox fxLayoutAlignStartCenter">
     <button (click)="mainDrawer.toggle()" mat-icon-button *ngIf="!isProd">
       <mat-icon>menu</mat-icon>
@@ -30,8 +30,7 @@
     Mode sombre
   </mat-slide-toggle>
 </mat-toolbar>
-
-<mat-drawer-container>
+<mat-drawer-container appDarkMode>
   <mat-drawer #mainDrawer mode="over">
     <mat-nav-list>
       <a mat-list-item><mat-icon>engineering</mat-icon> Administration</a>

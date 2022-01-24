@@ -11,9 +11,9 @@ export class DarkModeDirective {
     merge(of(this.darkModeService.getDarkMode()), this.darkModeService.darkMode$).subscribe(
       (value: boolean) => {
         if (value) {
-          renderer.addClass(hostElement.nativeElement, 'dark');
+          renderer.addClass(hostElement.nativeElement, 'dark-theme');
         } else {
-          renderer.removeClass(hostElement.nativeElement, 'dark');
+          renderer.removeClass(hostElement.nativeElement, 'dark-theme');
         }
       }
     )

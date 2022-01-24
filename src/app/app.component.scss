@@ -1,6 +1,7 @@
 :host {
   display: block;
   height: 100%;
+
   mat-toolbar {
     height: 64px;
   }
@@ -8,5 +9,13 @@
   mat-drawer-container {
     height: calc(100% - 64px);
     background: #EEEEEE;
+  }
+
+  mat-toolbar.dark-theme {
+
+  }
+
+  mat-drawer-container.dark-theme {
+    background: #232324;
   }
 }
