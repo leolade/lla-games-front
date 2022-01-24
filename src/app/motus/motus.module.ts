@@ -6,6 +6,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MotusMotInputComponent } from './motus-mot-input/motus-mot-input.component';
 import { MotusRoundComponent } from './motus-round/motus-round.component';
 import { MotusResumeRoundComponent } from './motus-resume-round/motus-resume-round.component';
+import {AppModule} from "../app.module";
+import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
@@ -17,6 +19,7 @@ import { MotusResumeRoundComponent } from './motus-resume-round/motus-resume-rou
     MatButtonModule,
     MatSnackBarModule,
     ClipboardModule,
+    SharedModule,
   ]
 })
 export class MotusModule {

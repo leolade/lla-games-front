@@ -6,7 +6,9 @@ import { UserDto } from '../models/dtos/user.dto';
 import { AuthService } from './core/auth.service';
 import { AppLoader, LoaderService } from './core/loader.service';
 import { LoginOrchestratorComponent } from './login/login-orchestrator/login-orchestrator.component';
-import { LoginService } from './login/login.service';
+import {LoginService} from './login/login.service';
+import {FormControl} from "@angular/forms";
+import {DarkModeService} from "./core/dark-mode.service";
 
 @Component({
   selector: 'app-root',
@@ -19,14 +21,21 @@ export class AppComponent {
   currentUser$: Observable<UserDto | null>;
   loader$: Observable<AppLoader<any> | null>;
   isProd: boolean = environment.production;
+  darkModeFC: FormControl = new FormControl(this.darkModeService.getDarkMode());
 
   constructor(private authService: AuthService, private loginService: LoginService, private dialog: MatDialog,
-              private loaderService: LoaderService) {
+              private loaderService: LoaderService, private darkModeService: DarkModeService) {
     this.currentUser$ = this.authService.currentUser.asObservable();
     this.loader$ = this.loaderService.loader$;
     if (this.authService.currentToken.getValue()) {
       this.loginService.updateCurrentUser().subscribe()
     }
+
+    this.darkModeFC.valueChanges.subscribe(
+      (value: boolean) => {
+        this.darkModeService.updateDarkMode(value);
+      }
+    )
   }
 
   onLoginClicked(): void {
