@@ -9,6 +9,10 @@
   mat-drawer-container {
     height: calc(100% - 64px);
     background: #EEEEEE;
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
   }
 
   mat-toolbar.dark-theme {

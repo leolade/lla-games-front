@@ -40,6 +40,18 @@ $angular-dark-theme: mat.define-dark-theme(
 }
 
 .simple-keyboard {
+  -webkit-transition: background-color 0.5s ease-out;
+  -moz-transition: background-color 0.5s ease-out;
+  -o-transition: background-color 0.5s ease-out;
+  transition: background-color 0.5s ease-out;
+
+  .hg-button {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+
   &.dark-theme {
     background-color: rgb(44, 44, 45);
     border-radius: 0 0 5px 5px;
