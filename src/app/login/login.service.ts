@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { UserDto } from 'lla-party-games-dto/dist/user.dto';
 import { map, Observable, tap } from 'rxjs';
-import { UserDto } from '../../models/dtos/user.dto';
 import { AuthService } from '../core/auth.service';
 import { UsersRepository } from '../repositories/users-repository.service';
 

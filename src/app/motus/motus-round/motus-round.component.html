@@ -1,9 +1,10 @@
 <div class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn main-flex-container" appDarkMode>
   <div appDarkMode>
-    <ng-container  *ngIf="motADeviner$ | async as motADeviner">
+    <ng-container  *ngIf="round$ | async as round">
       <app-motus-mot-input
         #motusMotInputComponent
-        [motADeviner]="motADeviner"
+        [motADeviner]="round.motADeviner"
+        [roundId]="round.roundId"
         [active]="nbTryIterator == nbTryActive"
         (validateEvent)="onValidateMot($event, nbTryIterator)"
         *ngFor="let nbTryIterator of nbTryArray"

@@ -22,11 +22,12 @@
     "@angular/platform-browser-dynamic": "~13.1.1",
     "@angular/router": "~13.1.1",
     "flexbox-sass": "^0.0.3",
-    "lla-party-games-dto": "~1.0.5",
+    "lla-party-games-dto": "~1.0.7",
     "rxjs": "~7.4.0",
     "simple-keyboard": "^3.4.31",
     "tslib": "^2.3.0",
     "type-script-utils-lla": "~1.0.3",
+    "uuid": "^8.3.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@angular/compiler-cli": "~13.1.1",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.20.42",
+    "@types/uuid": "^8.3.4",
     "jasmine-core": "~3.10.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
