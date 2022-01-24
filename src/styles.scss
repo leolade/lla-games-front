@@ -1,5 +1,75 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@import "@angular/material/theming";
 @import 'simple-keyboard/build/css/index.css';
+
+@include mat.core();
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+$angular-primary: mat.define-palette(mat.$teal-palette, 500, 100, 900);
+$angular-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$angular-warn: mat.define-palette(mat.$red-palette);
+
+$angular-default-theme: mat.define-light-theme(
+    (
+      color: (
+        primary: $angular-primary,
+        accent: $angular-accent,
+        warn: $angular-warn,
+      ),
+    )
+);
+
+$angular-dark-theme: mat.define-dark-theme(
+    (
+      color: (
+        primary: $angular-primary,
+        accent: $angular-accent,
+        warn: $angular-warn,
+      ),
+    )
+);
+
+@include mat.all-component-themes($angular-default-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($angular-dark-theme);
+}
+
+.simple-keyboard {
+  -webkit-transition: background-color 0.5s ease-out;
+  -moz-transition: background-color 0.5s ease-out;
+  -o-transition: background-color 0.5s ease-out;
+  transition: background-color 0.5s ease-out;
+
+  .hg-button {
+    -webkit-transition: background-color 0.5s ease-out;
+    -moz-transition: background-color 0.5s ease-out;
+    -o-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+
+  &.dark-theme {
+    background-color: rgb(44, 44, 45);
+    border-radius: 0 0 5px 5px;
+
+    .hg-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgb(100, 100, 100);
+      color: white;
+
+      &:active {
+        background: rgb(120, 120, 120);
+        color: white;
+      }
+    }
+  }
+
+  #root .simple-keyboard.dark-theme + .simple-keyboard-preview {
+    background: #1c4995;
+  }
+}
