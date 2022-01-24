@@ -2,24 +2,28 @@
   display: block;
   height: 100%;
 
-  mat-toolbar {
-    height: 64px;
+  .app-container {
+    height: 100%;
+    width: 100%;
+
+    mat-toolbar {
+      height: 64px;
+    }
+
+    mat-drawer-container {
+      height: calc(100% - 64px);
+      background: #EEEEEE;
+      -webkit-transition: background-color 0.5s ease-out;
+      -moz-transition: background-color 0.5s ease-out;
+      -o-transition: background-color 0.5s ease-out;
+      transition: background-color 0.5s ease-out;
+    }
+
+    &.dark-theme {
+      mat-drawer-container {
+        background: #232324;
+      }
+    }
   }
 
-  mat-drawer-container {
-    height: calc(100% - 64px);
-    background: #EEEEEE;
-    -webkit-transition: background-color 0.5s ease-out;
-    -moz-transition: background-color 0.5s ease-out;
-    -o-transition: background-color 0.5s ease-out;
-    transition: background-color 0.5s ease-out;
-  }
-
-  mat-toolbar.dark-theme {
-
-  }
-
-  mat-drawer-container.dark-theme {
-    background: #232324;
-  }
 }

@@ -118,6 +118,7 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.matDialog.open<MotusResumeRoundComponent, IMotusResumeRoundDialogOptions>(
           MotusResumeRoundComponent, {
+            panelClass: ['dark-theme'],
             data: {
               motADeviner: this.motADevinerCourant,
               reussi: this.isWin,
