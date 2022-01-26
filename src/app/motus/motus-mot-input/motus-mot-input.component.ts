@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -17,20 +18,16 @@ import { BehaviorSubject, interval, map, Observable, of, switchMap, take, throwE
 import { LocalUserService } from '../../core/local-user.service';
 import { MotRepositoryService } from '../../repositories/mot-repository.service';
 import { MotusRoundRepositoryService } from '../../repositories/motus-round-repository.service';
-import { UsersRepository } from '../../repositories/users-repository.service';
 
 @Component({
   selector: 'app-motus-mot-input',
   templateUrl: './motus-mot-input.component.html',
   styleUrls: ['./motus-mot-input.component.scss']
 })
-export class MotusMotInputComponent implements OnInit, OnChanges {
+export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit {
   static TEMPS_ANIMATION_REVELATION_LETTRE = 200;
   INPUT_MOT_LETTRE_ID_PREFIX: string = 'input-mot-lettre-';
   INPUT_MOT_LETTRE_ID_VALIDATED_PREFIX: string = 'input-mot-lettre-';
-  LETTRE_BIEN_PLACE_CLASS = 'well-placed-letter'
-  LETTRE_MAL_PLACE_CLASS = 'misplaced-letter'
-  LETTRE_MAUVAISE_CLASS = 'bad-letter'
 
 
   @ViewChildren('inputElement') inputs: QueryList<ElementRef> = new QueryList<ElementRef>();
@@ -38,6 +35,8 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
   @Input() validated: boolean = false;
   @Input() active: boolean = false;
   @Input() roundId: string = '';
+  @Input() validationClass: string[] = [];
+  @Input() preFilledWord: string = '';
   @Output() validateEvent: EventEmitter<[string, string]> = new EventEmitter<[string, string]>();
 
   motLength: number = 0;
@@ -58,15 +57,19 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.onMotChanged();
-    this.onValidityChanged();
+    this.preFillWord();
+    this.applyValidationClassInput();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['motADeviner']) {
       this.onMotChanged();
     }
-    if (changes['validated']) {
-      this.onValidityChanged();
+    if (changes['preFilledWord']) {
+      this.preFillWord();
+    }
+    if (changes['validationClass']) {
+      this.applyValidationClassInput();
     }
   }
 
@@ -120,6 +123,16 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
         (input.nativeElement as HTMLInputElement).value = '';
       }
     )
+  }
+
+  applyValidationClass(classes: string[], interval: Observable<number>): void {
+    this.validityClasses = new Array(this.motLength).fill("");
+    interval.pipe(take(this.motLength)).subscribe(
+      (intervalIterator: number) => {
+        this.validityClasses[intervalIterator] = classes[intervalIterator];
+        this.cdk.detectChanges();
+      }
+    );
   }
 
   private onMotChanged(mot: string = this.motADeviner): void {
@@ -181,11 +194,6 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
   }
 
   private onValidityChanged(): void {
-    if (!this.validated) {
-      this.validityClasses = Array(this.motLength).fill("");
-    } else {
-      this.validate().subscribe();
-    }
   }
 
   private validateMot(mot: string = this.getMot(), motADeviner: string = this.motADeviner): Observable<string> {
@@ -204,47 +212,29 @@ export class MotusMotInputComponent implements OnInit, OnChanges {
     ).pipe(
       map(
         (propositionValide: MotusRoundPropositionValidationDto) => {
-          this.applyValidationClass(propositionValide.encodedValidation);
           return propositionValide.encodedValidation;
         }
       )
     )
   }
 
-  private validate(mot: string = this.getMot(), motADeviner: string = this.motADeviner): Observable<string> {
-    return this.validateMot(mot, motADeviner)
-      .pipe(
-        map(
-          (motValide: string) => {
-            this.applyValidationClass(motValide);
-            return motValide;
-          }
-        ),
-      );
+  private preFillWord(): void {
+    if (this.preFilledWord?.length) {
+      Array.from(this.preFilledWord).forEach(
+        (letter: string) => {
+          this.setNextLetter(letter);
+        }
+      )
+    }
   }
 
-  private applyValidationClass(motValide: string): void {
-    const validityTempClasses = Array.from(motValide).map(
-      (symbol: string) => {
-        switch (symbol) {
-          case '+':
-            return this.LETTRE_BIEN_PLACE_CLASS;
-          case '-':
-            return this.LETTRE_MAL_PLACE_CLASS;
-          case '.':
-            return this.LETTRE_MAUVAISE_CLASS;
-          default:
-            return '';
-        }
-      }
-    );
-    this.validityClasses = new Array(this.motLength).fill("");
+  private applyValidationClassInput(): void {
+    if (this.validationClass?.length) {
+      this.applyValidationClass(this.validationClass, interval(0));
+    }
+  }
 
-    interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE).pipe(take(this.motLength)).subscribe(
-      (intervalIterator: number) => {
-        this.validityClasses[intervalIterator] = validityTempClasses[intervalIterator];
-        this.cdk.detectChanges();
-      }
-    );
+  ngAfterViewInit(): void {
+    this.preFillWord();
   }
 }

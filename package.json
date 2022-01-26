@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "~13.1.1",
     "@angular/router": "~13.1.1",
     "flexbox-sass": "^0.0.3",
-    "lla-party-games-dto": "~1.0.7",
+    "lla-party-games-dto": "~1.0.9",
     "rxjs": "~7.4.0",
     "simple-keyboard": "^3.4.31",
     "tslib": "^2.3.0",

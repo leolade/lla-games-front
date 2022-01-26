@@ -1,18 +1,23 @@
-<div class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn main-flex-container" appDarkMode>
-  <div appDarkMode>
-    <ng-container  *ngIf="round$ | async as round">
+<div appDarkMode class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn main-flex-container">
+  <div appDarkMode class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn">
+    <ng-container *ngIf="round$ | async as round">
       <app-motus-mot-input
         #motusMotInputComponent
+        (validateEvent)="onValidateMot($event, nbTryIterator, motusMotInputComponent)"
+        *ngFor="let nbTryIterator of nbTryArray"
+        [active]="nbTryIterator == nbTryActive"
         [motADeviner]="round.motADeviner"
         [roundId]="round.roundId"
-        [active]="nbTryIterator == nbTryActive"
-        (validateEvent)="onValidateMot($event, nbTryIterator)"
-        *ngFor="let nbTryIterator of nbTryArray"
-        [validated]="validations[nbTryIterator]">
+        [validated]="validations[nbTryIterator]"
+        [validationClass]="validationsClassInitialised[nbTryIterator]"
+        [preFilledWord]="preFilledWordInitialised[nbTryIterator]">
       </app-motus-mot-input>
+        <button  *ngIf="readonly" mat-raised-button color="primary" (click)="voirLeResumeClickHandler()" class="voir-resume-button">
+          Voir le résumé
+        </button>
     </ng-container>
   </div>
-  <div class="fxFlexbox fxLayoutAlignCenterCenter keyboard-flexbox">
-    <div class="simple-keyboard" appDarkMode></div>
+  <div class="fxFlexbox fxLayoutAlignCenterCenter keyboard-flexbox" *ngIf="!readonly">
+    <div appDarkMode class="simple-keyboard"></div>
   </div>
 </div>

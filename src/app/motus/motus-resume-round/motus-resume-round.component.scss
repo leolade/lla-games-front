@@ -1,3 +1,8 @@
 :host {
   display: block;
 }
+ ::ng-deep {
+   .infos-points {
+     white-space: pre-line;
+   }
+ }

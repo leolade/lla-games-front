@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserDto } from 'lla-party-games-dto/dist/user.dto';
-import { BehaviorSubject, of, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { UsersRepository } from '../repositories/users-repository.service';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class LocalUserService {
 
   private LOCAL_USER_UUID_LOCAL_STORAGE: string = 'LLAGAMES:LOCAL_USER_UUID';
   private localUserUuidSubject: BehaviorSubject<UserDto | undefined> = new BehaviorSubject<UserDto | undefined>(undefined);
+  localUserUuid$: Observable<UserDto | undefined> = this.localUserUuidSubject.asObservable();
 
   constructor(
     private userRepository: UsersRepository

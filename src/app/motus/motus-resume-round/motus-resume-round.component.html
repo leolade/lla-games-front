@@ -1,8 +1,12 @@
-<div class="fxFlexbox fxLayoutColumn fxLayoutAlignStartCenter">
-<span [innerHTML]="propositionHTML">
+<div class="fxFlexbox fxLayoutColumn fxLayoutAlignStartCenter fxLayoutGap10">
+  <span>Le mot était : {{summary?.word}}</span>
+  <span [innerHTML]="propositionHTML"></span>
+  <div class="fxFlexbox fxLayoutRow fxLayoutAlignStartCenter fxLayoutGap10">
+    <div>Points: {{summary?.totalPoints}}</div>
+    <mat-icon [matTooltip]="detailsPoints" matTooltipClass="infos-points">info</mat-icon>
+  </div>
 
-</span>
-  <button color="primary" mat-button mat-stroked-button (click)="onPartagerClickHandler()">
+  <button (click)="onPartagerClickHandler()" color="primary" mat-button mat-stroked-button>
     Partager
   </button>
 </div>
