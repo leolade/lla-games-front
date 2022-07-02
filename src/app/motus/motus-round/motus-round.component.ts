@@ -126,7 +126,7 @@ export class MotusRoundComponent implements AfterViewInit, OnDestroy {
    */
   @HostListener('document:keydown', ['$event'])
   onKeyDown($event: KeyboardEvent) {
-    if (!this.readonly) {
+    if (!this.readonly && this.selectedTabIndex === 0) {
       if (this.keyboardEventService.isLetterKeyboardEvent($event)) {
         this.setNextLetter($event.key);
       } else if (this.keyboardEventService.isDeleteKeyboardEvent($event)) {
@@ -151,7 +151,7 @@ export class MotusRoundComponent implements AfterViewInit, OnDestroy {
         },
         display: {
           '{bksp}': '←',
-          '{enter}': '↵ Entrée'
+          '{enter}': '↵ <span class="enter-keyboard-text"> Entrée</span>',
         },
         theme: `hg-theme-default ${this.darkModeService.getDarkMode() ? 'dark-theme' : ''}`,
       });
@@ -227,16 +227,18 @@ export class MotusRoundComponent implements AfterViewInit, OnDestroy {
   }
 
   private onKeyPress(button: string): any {
-    switch (button) {
-      case '{bksp}':
-        this.erasePreviousLetter();
-        break;
-      case '{enter}':
-        this.validateMot();
-        break;
-      default:
-        this.setNextLetter(button);
-        break;
+    if (this.selectedTabIndex === 0 ) {
+      switch (button) {
+        case '{bksp}':
+          this.erasePreviousLetter();
+          break;
+        case '{enter}':
+          this.validateMot();
+          break;
+        default:
+          this.setNextLetter(button);
+          break;
+      }
     }
   }
 
