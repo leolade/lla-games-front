@@ -7,6 +7,10 @@
       margin: 15px 0;
       height: 30px;
 
+      &.my-score {
+        font-weight: 800;
+      }
+
       &:nth-of-type(1) {
         background: goldenrod;
         color: black;

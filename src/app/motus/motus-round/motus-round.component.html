@@ -42,6 +42,8 @@
         </mat-card>
         <mat-card class="ranking">
           <mat-card-title>Classement</mat-card-title>
+          <mat-card-subtitle>Votre score apparait en gras, vous pouvez modifier votre pseudo dans l'onglet <mat-icon>person</mat-icon>
+          </mat-card-subtitle>
           <mat-card-content>
             <app-motus-ranking [ranks]="motusRoundClassementService.classement$ | async">
             </app-motus-ranking>

@@ -90,10 +90,19 @@
           mat-card {
             &.ranking {
               margin-top: 20px;
-            }
-
-            &.ranking {
               overflow: auto;
+
+              ::ng-deep {
+                .mat-card-subtitle {
+                  display: flex;
+                  .mat-icon {
+                    margin-left: 4px;
+                    height: 17px;
+                    width: 17px;
+                    font-size: 17px;
+                  }
+                }
+              }
             }
           }
         }

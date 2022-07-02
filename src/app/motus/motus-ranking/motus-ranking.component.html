@@ -1,6 +1,7 @@
 <mat-list dense>
   <ng-container *ngIf="ranks && ranks.length > 0; else noResults">
-    <mat-list-item *ngFor="let rank of ranks; let i = index" class="fxFlexbox fxLayoutRow fxLayoutGap10 fxLayoutAlignStartCenter">
+    <mat-list-item *ngFor="let rank of ranks; let i = index" class="fxFlexbox fxLayoutRow fxLayoutGap10 fxLayoutAlignStartCenter"
+    [ngClass]="{'my-score': rank.me}">
     <div class="left-part">
       <div class="rank-number">{{i+1}}.</div>
       <div class="rank-playername">{{rank.playerName|| 'Inconnu'}}</div>
