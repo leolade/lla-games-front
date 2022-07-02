@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MotusRoundRankDto } from 'lla-party-games-dto/dist/motus-round-rank.dto';
 
 @Component({
@@ -7,12 +7,10 @@ import { MotusRoundRankDto } from 'lla-party-games-dto/dist/motus-round-rank.dto
   styleUrls: ['./motus-ranking.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotusRankingComponent implements OnInit {
+export class MotusRankingComponent {
   @Input() ranks: MotusRoundRankDto[] | null = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-motus-game-orchestrator',
@@ -6,11 +6,9 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./motus-game-orchestrator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotusGameOrchestratorComponent implements OnInit {
+export class MotusGameOrchestratorComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
   }
 
 }

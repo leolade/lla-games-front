@@ -5,7 +5,6 @@ import {
   Component,
   HostListener,
   OnDestroy,
-  OnInit,
   QueryList,
   ViewChildren
 } from '@angular/core';
@@ -38,7 +37,7 @@ import { MotusRoundService } from './motus-round.service';
   styleUrls: ['./motus-round.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotusRoundComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MotusRoundComponent implements AfterViewInit, OnDestroy {
 
   LETTRE_BIEN_PLACE_CLASS = 'well-placed-letter'
   LETTRE_MAL_PLACE_CLASS = 'misplaced-letter'
@@ -134,9 +133,6 @@ export class MotusRoundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
-  }
-
   ngAfterViewInit() {
     if (!this.readonly) {
       // On paramètre le clavier virtuel
@@ -201,25 +197,25 @@ export class MotusRoundComponent implements OnInit, AfterViewInit, OnDestroy {
     (round ?
       this.loadResume(round.roundId) :
       of(undefined)).pipe(
-        switchMap((summary: RoundEndSummaryDto | undefined) => {
-          return forkJoin([
-            interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE * (proposition.length + 1)).pipe(take(1)),
-            of(summary),
-            round ?
-              this.loadClassement(round.roundId) :
-              of([]),
-          ]).pipe(
-            map(() => summary)
-          )
-        }),
-      )
-        .subscribe(
-          () => {
-            this.readonly = true;
-            this.selectedTabIndex = this.RESUME_TAB_INDEX;
-            this.changeDetectorRef.detectChanges();
-          }
+      switchMap((summary: RoundEndSummaryDto | undefined) => {
+        return forkJoin([
+          interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE * (proposition.length + 1)).pipe(take(1)),
+          of(summary),
+          round ?
+            this.loadClassement(round.roundId) :
+            of([]),
+        ]).pipe(
+          map(() => summary)
         )
+      }),
+    )
+      .subscribe(
+        () => {
+          this.readonly = true;
+          this.selectedTabIndex = this.RESUME_TAB_INDEX;
+          this.changeDetectorRef.detectChanges();
+        }
+      )
   }
 
   private onKeyPress(button: string): any {

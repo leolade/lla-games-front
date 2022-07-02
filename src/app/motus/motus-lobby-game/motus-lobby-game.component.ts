@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MotusGameCreateParamsDto } from 'lla-party-games-dto/dist/motus-game-create-params.dto';
 import { MotusGameDto } from 'lla-party-games-dto/dist/motus-game.dto';
@@ -11,7 +11,7 @@ import { MotusGameRepositoryService } from '../../repositories/motus-game-reposi
   styleUrls: ['./motus-lobby-game.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotusLobbyGameComponent implements OnInit {
+export class MotusLobbyGameComponent {
 
   creatingGamePendingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
@@ -19,9 +19,6 @@ export class MotusLobbyGameComponent implements OnInit {
     private router: Router,
     private gameRepository: MotusGameRepositoryService,
   ) {
-  }
-
-  ngOnInit(): void {
   }
 
   creerPartieClickHandler(): void {

@@ -12,7 +12,7 @@
             #motusMotInputComponent
             (validateEvent)="onValidateMot($event, nbTryIterator, motusMotInputComponent)"
             *ngFor="let nbTryIterator of nbTryArray"
-            [active]="nbTryIterator == nbTryActive"
+            [active]="nbTryIterator === nbTryActive"
             [motLength]="round.motADevinerLength"
             [preFilledWord]="preFilledWordInitialised[nbTryIterator]"
             [roundId]="round.roundId"

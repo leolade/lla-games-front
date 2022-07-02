@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { AppLoader, LoaderService } from '../core/loader.service';
 
@@ -8,7 +8,7 @@ import { AppLoader, LoaderService } from '../core/loader.service';
   styleUrls: ['./loader-overlay.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayComponent implements OnInit {
+export class LoaderOverlayComponent {
 
   loaderMessage$: Observable<string | undefined>;
 
@@ -20,9 +20,6 @@ export class LoaderOverlayComponent implements OnInit {
         return loader?.message || undefined
       })
     )
-  }
-
-  ngOnInit(): void {
   }
 
 }
