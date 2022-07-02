@@ -7,8 +7,8 @@
       <div class="rank-playername">{{rank.playerName|| 'Inconnu'}}</div>
     </div>
       <div class="right-part">
-        <div class="rank-propositions">{{rank.nbProposition}} propositions</div>
-        <div class="rank-points">{{rank.points}} points</div>
+        <div class="rank-propositions">{{rank.nbProposition}} essai{{rank.nbProposition > 1 ? 's' : ''}}</div>
+        <div class="rank-points">{{rank.points}} pts</div>
       </div>
     </mat-list-item>
    </ng-container>

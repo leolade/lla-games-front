@@ -63,7 +63,7 @@
           <div class="fxFlexbox fxLayoutRow fxLayoutGap20 fxLayoutAlignStartCenter">
             <mat-form-field appearance="outline">
               <mat-label>Mon nom/pseudo pour le classement</mat-label>
-              <input [formControl]="nameFC" [maxLength]="25" matInput>
+              <input [formControl]="nameFC" [maxLength]="20" matInput>
               <mat-hint [align]="'end'">{{nameFC.value?.length || 0}}/20</mat-hint>
             </mat-form-field>
             <div>
