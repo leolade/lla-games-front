@@ -112,7 +112,11 @@ export class MotusRoundComponent implements AfterViewInit, OnDestroy {
     )
 
     this.userSubscription = this.userService.user$.pipe().subscribe((user?: ConnectedUserDto | null) => {
-      this.nameFC.setValue(user?.username)
+      this.nameFC.setValue(user?.username);
+      let roundId: string | undefined = this.roundSubject.getValue()?.roundId;
+      if (roundId) {
+        this.loadClassement(roundId).subscribe()
+      }
     })
   }
 
@@ -185,6 +189,10 @@ export class MotusRoundComponent implements AfterViewInit, OnDestroy {
       (user: UserDto) => {
         this.nameFC.setValue(user.username);
         this.saveUsernameDisabled = false;
+        let roundId: string | undefined = this.roundSubject.getValue()?.roundId;
+        if (roundId) {
+          this.loadClassement(roundId).subscribe()
+        }
       }
     )
   }
