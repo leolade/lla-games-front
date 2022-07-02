@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MotusGameCreateParamsDto } from 'lla-party-games-dto/dist/motus-game-create-params.dto';
 import { MotusGameDto } from 'lla-party-games-dto/dist/motus-game.dto';
 import { Observable } from 'rxjs';
-import { AuthService } from '../core/auth.service';
 import { HttpService } from './http.service';
 
 @Injectable({
@@ -11,7 +11,6 @@ import { HttpService } from './http.service';
 export class MotusGameRepositoryService extends HttpService {
 
   constructor(
-    private authService: AuthService,
     protected override httpClient: HttpClient
   ) {
     super(httpClient, 'motus/game')
@@ -19,5 +18,9 @@ export class MotusGameRepositoryService extends HttpService {
 
   getDailyGame(): Observable<MotusGameDto> {
     return this.get<MotusGameDto>(`daily-game`);
+  }
+
+  createGame(param: MotusGameCreateParamsDto): Observable<MotusGameDto> {
+    return this.post('create', param);
   }
 }

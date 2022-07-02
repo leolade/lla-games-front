@@ -1,23 +1,75 @@
 <div appDarkMode class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn main-flex-container">
-  <div appDarkMode class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn">
-    <ng-container *ngIf="round$ | async as round">
-      <app-motus-mot-input
-        #motusMotInputComponent
-        (validateEvent)="onValidateMot($event, nbTryIterator, motusMotInputComponent)"
-        *ngFor="let nbTryIterator of nbTryArray"
-        [active]="nbTryIterator == nbTryActive"
-        [motADeviner]="round.motADeviner"
-        [roundId]="round.roundId"
-        [validated]="validations[nbTryIterator]"
-        [validationClass]="validationsClassInitialised[nbTryIterator]"
-        [preFilledWord]="preFilledWordInitialised[nbTryIterator]">
-      </app-motus-mot-input>
-        <button  *ngIf="readonly" mat-raised-button color="primary" (click)="voirLeResumeClickHandler()" class="voir-resume-button">
-          Voir le résumé
-        </button>
-    </ng-container>
-  </div>
-  <div class="fxFlexbox fxLayoutAlignCenterCenter keyboard-flexbox" *ngIf="!readonly">
-    <div appDarkMode class="simple-keyboard"></div>
-  </div>
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>
+          sports_esports
+        </mat-icon>
+      </ng-template>
+      <div appDarkMode class="fxFlexbox fxLayoutAlignSpaceBetweenCenter fxLayoutColumn">
+        <ng-container *ngIf="round$ | async as round">
+          <app-motus-mot-input
+            #motusMotInputComponent
+            (validateEvent)="onValidateMot($event, nbTryIterator, motusMotInputComponent)"
+            *ngFor="let nbTryIterator of nbTryArray"
+            [active]="nbTryIterator == nbTryActive"
+            [motLength]="round.motADevinerLength"
+            [preFilledWord]="preFilledWordInitialised[nbTryIterator]"
+            [roundId]="round.roundId"
+            [validated]="validations[nbTryIterator]"
+            [validationClass]="validationsClassInitialised[nbTryIterator]">
+          </app-motus-mot-input>
+        </ng-container>
+      </div>
+      <div *ngIf="!readonly" class="fxFlexbox fxLayoutAlignCenterCenter keyboard-flexbox">
+        <div appDarkMode class="simple-keyboard"></div>
+      </div>
+    </mat-tab>
+
+    <mat-tab *ngIf="motusRoundService.resume$ | async as resume" class>
+      <ng-template mat-tab-label>
+        <mat-icon>
+          leaderboard
+        </mat-icon>
+      </ng-template>
+      <div class="leaderboard fxFlexbox fxLayoutColumn fxLayoutAlignStartCenter">
+        <mat-card class="resume-round">
+          <app-resume-round
+            [reussi]="motusRoundService.win$ | async"
+            [summary]="resume"
+            [validationsPropositions]="motusRoundService.propositions$ | async">
+          </app-resume-round>
+        </mat-card>
+        <mat-card class="ranking">
+          <mat-card-title>Classement</mat-card-title>
+          <mat-card-content>
+            <app-motus-ranking [ranks]="motusRoundClassementService.classement$ | async">
+            </app-motus-ranking>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>
+          person
+        </mat-icon>
+      </ng-template>
+      <ng-template matTabContent>
+        <div class="options fxFlexbox fxLayoutColumn fxLayoutAlignStartCenter">
+          <div class="fxFlexbox fxLayoutRow fxLayoutGap20 fxLayoutAlignStartCenter">
+            <mat-form-field appearance="outline">
+              <mat-label>Mon nom/pseudo pour le classement</mat-label>
+              <input [formControl]="nameFC" [maxLength]="25" matInput>
+              <mat-hint [align]="'end'">{{nameFC.value?.length || 0}}/20</mat-hint>
+            </mat-form-field>
+            <div>
+              <button mat-raised-button (click)="saveUsername()">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
 </div>

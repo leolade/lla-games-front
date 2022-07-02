@@ -1,33 +1,36 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostListener,
+  OnDestroy,
   OnInit,
   QueryList,
   ViewChildren
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Data } from '@angular/router';
-import { MotusGameDto } from 'lla-party-games-dto/dist/motus-game.dto';
+import { ConnectedUserDto } from 'lla-party-games-dto/dist/connected-user.dto';
 import { MotusPlayerPropositionValideDto } from 'lla-party-games-dto/dist/motus-player-proposition-valide.dto';
+import { MotusRoundRankDto } from 'lla-party-games-dto/dist/motus-round-rank.dto';
 import { MotusRoundDto } from 'lla-party-games-dto/dist/motus-round.dto';
 import { RoundEndSummaryDto } from 'lla-party-games-dto/dist/round-end-summary.dto';
+import { UserDto } from 'lla-party-games-dto/dist/user.dto';
 import { MotusPlayerGameDto } from 'lla-party-games-dto/src/motus-player-game.dto';
-import { forkJoin, interval, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, interval, map, Observable, of, Subscription, switchMap, take } from 'rxjs';
 import Keyboard from 'simple-keyboard';
 import { ArrayUtils } from 'type-script-utils-lla/dist/array.utils';
 import { DarkModeService } from '../../core/dark-mode.service';
-import { LocalUserService } from '../../core/local-user.service';
+import { UserService } from '../../core/user.service';
 import { KeyboardEventService } from '../../keyboard-event.service';
 import { MotRepositoryService } from '../../repositories/mot-repository.service';
 import { MotusGameRepositoryService } from '../../repositories/motus-game-repository.service';
 import { MotusRoundRepositoryService } from '../../repositories/motus-round-repository.service';
 import { MotusMotInputComponent } from '../motus-mot-input/motus-mot-input.component';
-import {
-  IMotusResumeRoundDialogOptions,
-  MotusResumeRoundComponent
-} from '../motus-resume-round/motus-resume-round.component';
+import { MotusRoundClassementService } from './motus-round-classement.service';
+import { MotusRoundService } from './motus-round.service';
 
 @Component({
   selector: 'app-motus-round',
@@ -35,11 +38,12 @@ import {
   styleUrls: ['./motus-round.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotusRoundComponent implements OnInit, AfterViewInit {
+export class MotusRoundComponent implements OnInit, AfterViewInit, OnDestroy {
 
   LETTRE_BIEN_PLACE_CLASS = 'well-placed-letter'
   LETTRE_MAL_PLACE_CLASS = 'misplaced-letter'
   LETTRE_MAUVAISE_CLASS = 'bad-letter'
+  RESUME_TAB_INDEX = 1;
 
   @ViewChildren('motusMotInputComponent') inputs: QueryList<MotusMotInputComponent> = new QueryList<MotusMotInputComponent>();
 
@@ -48,57 +52,69 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
   validations: boolean[] = Array(this.nbTry).fill(false);
   keyboard: Keyboard | undefined;
   nbTryActive: number = 0;
-  round$: Observable<MotusRoundDto>;
   isWin: boolean = false;
-  isLoose: boolean = false;
   validationsClassInitialised: string[][] = [];
   preFilledWordInitialised: string[] = [];
   readonly: boolean = false;
-
-  private roundCourant?: MotusRoundDto;
+  nameFC: FormControl = new FormControl();
+  selectedTabIndex: number = 0;
+  saveUsernameDisabled: boolean = false;
+  private roundSubject: BehaviorSubject<MotusRoundDto | null> = new BehaviorSubject<MotusRoundDto | null>(null);
+  round$: Observable<MotusRoundDto | null> = this.roundSubject.asObservable();
   private propositions: Map<number, [string, string]> = new Map()
+  private userSubscription: Subscription;
 
   constructor(
+    public motusRoundService: MotusRoundService,
+    public motusRoundClassementService: MotusRoundClassementService,
+    private userService: UserService,
     private keyboardEventService: KeyboardEventService,
     private motRepository: MotRepositoryService,
     private motusGameRepositoryService: MotusGameRepositoryService,
     private motusRoundRepositoryService: MotusRoundRepositoryService,
-    private localUserService: LocalUserService,
     private darkModeService: DarkModeService,
     private matDialog: MatDialog,
+    private changeDetectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
   ) {
     this.route.data.subscribe(
       (data: Data) => {
-        if (data['dailyGameRoundPlayerPropositions']) {
-          const dailyGameRoundPlayerPropositions: MotusPlayerGameDto = data['dailyGameRoundPlayerPropositions'];
-          this.validationsClassInitialised = []
-          this.preFilledWordInitialised = []
-          this.readonly = dailyGameRoundPlayerPropositions.readonly || false;
-          dailyGameRoundPlayerPropositions.propositionsValides.forEach(
-            (proposition: MotusPlayerPropositionValideDto, index: number) => {
-              this.validations[index] = true;
-              this.nbTryActive += 1;
-              this.validationsClassInitialised.push(this.getClassesFromValidation(proposition.validation));
-              this.preFilledWordInitialised.push(proposition.proposition);
-              this.propositions.set(index, [proposition.proposition, proposition.validation])
+        if (data['round']) {
+          const roundInfo: MotusRoundDto = data['round'][0];
+          const playerRoundInfo: MotusPlayerGameDto = data['round'][1];
+
+          if (playerRoundInfo) {
+            this.validationsClassInitialised = []
+            this.preFilledWordInitialised = []
+            this.readonly = playerRoundInfo.readonly || false;
+            playerRoundInfo.propositionsValides.forEach(
+              (proposition: MotusPlayerPropositionValideDto, index: number) => {
+                this.validations[index] = true;
+                this.nbTryActive += 1;
+                this.validationsClassInitialised.push(this.getClassesFromValidation(proposition.validation));
+                this.preFilledWordInitialised.push(proposition.proposition);
+                this.propositions.set(index, [proposition.proposition, proposition.validation])
+              }
+            )
+            if (this.readonly) {
+              this.nbTryActive = -1;
             }
-          )
-          if (this.readonly) {
-            this.nbTryActive = -1;
+          }
+
+          if (playerRoundInfo) {
+            this.roundSubject.next(roundInfo);
+            if (this.readonly) {
+              this.loadResume(roundInfo.roundId).subscribe();
+              this.loadClassement(roundInfo.roundId).subscribe();
+            }
           }
         }
       }
     )
-    this.round$ = this.motusGameRepositoryService.getDailyGame()
-      .pipe(
-        switchMap(
-          (game: MotusGameDto) => {
-            return this.motusRoundRepositoryService.getRound(game.roundsId[0]);
-          }
-        ),
-        tap((round: MotusRoundDto) => this.roundCourant = round)
-      );
+
+    this.userSubscription = this.userService.user$.pipe().subscribe((user?: ConnectedUserDto | null) => {
+      this.nameFC.setValue(user?.username)
+    })
   }
 
   /**
@@ -153,25 +169,7 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
 
     // Si la partie s'arrête
     if (isMotTrouve || isLastTry) {
-      this.isWin = isMotTrouve;
-      this.nbTryActive = -1;
-
-      forkJoin([
-        interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE * (proposition.length + 1)).pipe(take(1)),
-        this.roundCourant ?
-          this.motusRoundRepositoryService.getPointsRoundUnloggedUser(this.roundCourant.roundId, this.localUserService.getLocalUser().uuid) :
-          of(undefined)
-      ]).pipe(
-        map(
-          ([n, summary]: [number, RoundEndSummaryDto | undefined]) => {
-            return summary
-          }
-        )
-      ).subscribe(
-        (summary: RoundEndSummaryDto | undefined) => {
-          this.voirResume(summary);
-        }
-      )
+      this.endRound(isMotTrouve, proposition);
     } else {
       this.nbTryActive += 1;
     }
@@ -181,35 +179,47 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
     input.applyValidationClass(classes, interval);
   }
 
-  voirLeResumeClickHandler(): void {
-    const o: Observable<RoundEndSummaryDto | undefined>  = this.roundCourant
-      ? this.motusRoundRepositoryService.getPointsRoundUnloggedUser(this.roundCourant.roundId, this.localUserService.getLocalUser().uuid)
-      : of(undefined);
-    o.pipe()
-      .subscribe(
-      {
-        next: (summary: RoundEndSummaryDto | undefined) => {
-          this.voirResume(summary);
-        }
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+
+  saveUsername(): void {
+    this.saveUsernameDisabled = true;
+    this.userService.saveUsername(this.nameFC.value).subscribe(
+      (user: UserDto) => {
+        this.nameFC.setValue(user.username);
+        this.saveUsernameDisabled = false;
       }
     )
   }
 
-  private voirResume(summary: RoundEndSummaryDto | undefined): void {
-    this.matDialog.open<MotusResumeRoundComponent, IMotusResumeRoundDialogOptions>(
-      MotusResumeRoundComponent, {
-        panelClass: ['dark-theme'],
-        data: {
-          summary: summary,
-          reussi: this.isWin,
-          validationsPropositions: Array.from(this.propositions.keys()).sort().map(
-            (nbTry: number) => {
-              return (this.propositions.get(nbTry) || ['', ''])[1]
-            }
+  private endRound(isMotTrouve: boolean, proposition: string): void {
+    this.isWin = isMotTrouve;
+    this.nbTryActive = -1;
+    const round: MotusRoundDto | null = this.roundSubject.getValue();
+
+    (round ?
+      this.loadResume(round.roundId) :
+      of(undefined)).pipe(
+        switchMap((summary: RoundEndSummaryDto | undefined) => {
+          return forkJoin([
+            interval(MotusMotInputComponent.TEMPS_ANIMATION_REVELATION_LETTRE * (proposition.length + 1)).pipe(take(1)),
+            of(summary),
+            round ?
+              this.loadClassement(round.roundId) :
+              of([]),
+          ]).pipe(
+            map(() => summary)
           )
-        } as IMotusResumeRoundDialogOptions
-      }
-    );
+        }),
+      )
+        .subscribe(
+          () => {
+            this.readonly = true;
+            this.selectedTabIndex = this.RESUME_TAB_INDEX;
+            this.changeDetectorRef.detectChanges();
+          }
+        )
   }
 
   private onKeyPress(button: string): any {
@@ -251,7 +261,9 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
 
   private updateKeyboardLettreAbsente(): void {
     const lettresPresentes: string[] = Array.from(this.propositions.entries()).map(
-      ([nbTry, [proposition, validation]]: [number, [string, string]]) => {
+      (propositionInfos: [number, [string, string]]) => {
+        const proposition = propositionInfos[1][0];
+        const validation = propositionInfos[1][1];
         return Array.from(proposition).filter(
           (lettre: string, index: number) => {
             return ['+', '-'].includes(validation[index])
@@ -260,7 +272,9 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
       }
     ).flat()
     const lettresAbsentes: string[] = Array.from(this.propositions.entries()).map(
-      ([nbTry, [proposition, validation]]: [number, [string, string]]) => {
+      (propositionInfos: [number, [string, string]]) => {
+        const proposition = propositionInfos[1][0];
+        const validation = propositionInfos[1][1];
         return Array.from(proposition).filter(
           (lettre: string, index: number) => {
             return !['+', '-'].includes(validation[index])
@@ -278,7 +292,9 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
 
   private updateKeyboardLettreBienPlace(): void {
     const lettresBienPlaces: string[] = Array.from(this.propositions.entries()).map(
-      ([nbTry, [proposition, validation]]: [number, [string, string]]) => {
+      (propositionInfos: [number, [string, string]]) => {
+        const proposition = propositionInfos[1][0];
+        const validation = propositionInfos[1][1];
         return Array.from(proposition).filter(
           (lettre: string, index: number) => {
             return ['+'].includes(validation[index])
@@ -292,7 +308,9 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
 
   private updateKeyboardLettreMalPlace(): void {
     const lettresBienPlaces: string[] = Array.from(this.propositions.entries()).map(
-      ([nbTry, [proposition, validation]]: [number, [string, string]]) => {
+      (propositionInfos: [number, [string, string]]) => {
+        const proposition = propositionInfos[1][0];
+        const validation = propositionInfos[1][1];
         return Array.from(proposition).filter(
           (lettre: string, index: number) => {
             return ['+'].includes(validation[index])
@@ -302,7 +320,9 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
     ).flat();
 
     const lettresMalPlaces: string[] = Array.from(this.propositions.entries()).map(
-      ([nbTry, [proposition, validation]]: [number, [string, string]]) => {
+      (propositionInfos: [number, [string, string]]) => {
+        const proposition = propositionInfos[1][0];
+        const validation = propositionInfos[1][1];
         return Array.from(proposition).filter(
           (lettre: string, index: number) => {
             return ['+', '-'].includes(validation[index])
@@ -333,6 +353,23 @@ export class MotusRoundComponent implements OnInit, AfterViewInit {
         }
       }
     );
-    ;
+  }
+
+  private loadResume(roundId: string): Observable<RoundEndSummaryDto | undefined> {
+    return this.motusRoundService.load(
+      roundId,
+      this.isWin,
+      Array.from(this.propositions.keys()).sort().map(
+        (nbTry: number) => {
+          return (this.propositions.get(nbTry) || ['', ''])[1]
+        }
+      )
+    )
+  }
+
+  private loadClassement(roundId: string): Observable<MotusRoundRankDto[]> {
+    return this.motusRoundClassementService.load(
+      roundId
+    )
   }
 }

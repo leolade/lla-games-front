@@ -1,29 +1,24 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { LocalUserDto } from 'lla-party-games-dto/dist/local-user.dto';
-import { UserDto } from 'lla-party-games-dto/dist/user.dto';
-import { filter, map, Observable } from 'rxjs';
-import { ObjectUtils } from 'type-script-utils-lla/dist/object.utils';
-import { LocalUserService } from './local-user.service';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { map, Observable } from 'rxjs';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NeedLocalUserGuardService  implements CanActivate {
+export class NeedLocalUserGuardService implements CanActivate, CanActivateChild {
 
-  constructor(private localUserService: LocalUserService) {
+  constructor(private userService: UserService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this.localUserService.getLocalUser()?.uuid) {
-      return true;
-    }
-    return this.localUserService.localUserUuid$.pipe(
-      filter((user: UserDto | undefined) => {
-        return ObjectUtils.isNotNil(user);
-      }),
+    return this.userService.getOrCreateToken().pipe(
       map(() => true)
     )
+  }
+
+  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return this.canActivate(childRoute, state);
   }
 
 }

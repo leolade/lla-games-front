@@ -1,0 +1,17 @@
+<mat-list dense>
+  <ng-container *ngIf="ranks && ranks.length > 0; else noResults">
+    <mat-list-item *ngFor="let rank of ranks; let i = index" class="fxFlexbox fxLayoutRow fxLayoutGap10 fxLayoutAlignStartCenter">
+    <div class="left-part">
+      <div class="rank-number">{{i+1}}.</div>
+      <div class="rank-playername">{{rank.playerName|| 'Inconnu'}}</div>
+    </div>
+      <div class="right-part">
+        <div class="rank-propositions">{{rank.nbProposition}} propositions</div>
+        <div class="rank-points">{{rank.points}} points</div>
+      </div>
+    </mat-list-item>
+   </ng-container>
+  <ng-template #noResults>
+    <mat-list-item> Aucun classement enregistré </mat-list-item>
+  </ng-template>
+</mat-list>

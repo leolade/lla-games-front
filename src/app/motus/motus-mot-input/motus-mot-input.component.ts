@@ -15,7 +15,6 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MotusRoundPropositionValidationDto } from 'lla-party-games-dto/dist/motus-round-proposition-validation.dto';
 import { BehaviorSubject, interval, map, Observable, of, switchMap, take, throwError } from 'rxjs';
-import { LocalUserService } from '../../core/local-user.service';
 import { MotRepositoryService } from '../../repositories/mot-repository.service';
 import { MotusRoundRepositoryService } from '../../repositories/motus-round-repository.service';
 
@@ -31,7 +30,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
 
 
   @ViewChildren('inputElement') inputs: QueryList<ElementRef> = new QueryList<ElementRef>();
-  @Input() motADeviner: string = '';
+  @Input() motLength: number = 0;
   @Input() validated: boolean = false;
   @Input() active: boolean = false;
   @Input() roundId: string = '';
@@ -39,8 +38,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() preFilledWord: string = '';
   @Output() validateEvent: EventEmitter<[string, string]> = new EventEmitter<[string, string]>();
 
-  motLength: number = 0;
-  motAsArray: string[] = [];
+  motLengthAsArray: number[] = [];
   validityClasses: string[] = [];
 
   private validationPendingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -50,20 +48,19 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
     private cdk: ChangeDetectorRef,
     private motRepositoryService: MotRepositoryService,
     private motusRoundRepositoryService: MotusRoundRepositoryService,
-    private localUserService: LocalUserService,
     private snackBar: MatSnackBar
   ) {
   }
 
   ngOnInit(): void {
-    this.onMotChanged();
+    this.onMotLengthChange();
     this.preFillWord();
     this.applyValidationClassInput();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['motADeviner']) {
-      this.onMotChanged();
+    if (changes['motLength']) {
+      this.onMotLengthChange();
     }
     if (changes['preFilledWord']) {
       this.preFillWord();
@@ -73,7 +70,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
-  onValiderClickHandler($event?: MouseEvent): void {
+  onValiderClickHandler(): void {
     if (this.validationPendingSubject.getValue()) {
       return;
     }
@@ -117,7 +114,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
-  onResetClickHandler($event: MouseEvent): void {
+  onResetClickHandler(): void {
     this.inputs.toArray().forEach(
       (input: ElementRef) => {
         (input.nativeElement as HTMLInputElement).value = '';
@@ -135,9 +132,8 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
     );
   }
 
-  private onMotChanged(mot: string = this.motADeviner): void {
-    this.motLength = this.motADeviner.length;
-    this.motAsArray = Array.from(this.motADeviner);
+  ngAfterViewInit(): void {
+    this.preFillWord();
   }
 
   private getFirstEmptyInput(inputs: ElementRef[] = this.inputs.toArray()): HTMLInputElement | null {
@@ -176,10 +172,10 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private checkMotValide(): Observable<void> {
-    if (this.getMot().includes('_') || this.getMot().trim().length < this.motADeviner?.length) {
+    if (this.getMot().includes('_') || this.getMot().trim().length < this.motLength) {
       return throwError(() => new Error('Le mot est trop court'));
     }
-    if (this.getMot().trim().length > this.motADeviner?.length) {
+    if (this.getMot().trim().length > this.motLength) {
       return throwError(() => new Error('Le mot est trop long'));
     }
     return this.motRepositoryService.exist(this.getMot())
@@ -193,20 +189,9 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
       );
   }
 
-  private onValidityChanged(): void {
-  }
-
-  private validateMot(mot: string = this.getMot(), motADeviner: string = this.motADeviner): Observable<string> {
-    return this.motRepositoryService.valiadteWord({
-      motAValider: motADeviner,
-      motSoumis: mot
-    });
-  }
-
   private makeProposition(mot: string = this.getMot()): Observable<string> {
     return this.motusRoundRepositoryService.makeProposition(
       this.roundId, {
-        localUserUuid: this.localUserService.getLocalUser().uuid,
         suggestWord: mot,
       }
     ).pipe(
@@ -234,7 +219,7 @@ export class MotusMotInputComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
-  ngAfterViewInit(): void {
-    this.preFillWord();
+  private onMotLengthChange(): void {
+    this.motLengthAsArray = Array(this.motLength).fill(0).map((x,i)=>i);
   }
 }

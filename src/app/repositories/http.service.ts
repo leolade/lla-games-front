@@ -14,138 +14,138 @@ import {
 
 export class HttpService {
 
-  baseURL: string = environment.baseURL;
+  protected baseURL: string = environment.baseURL;
 
   constructor(
     protected httpClient: HttpClient,
-    public controllerURL: string = ''
+    protected controllerURL: string = ''
   ) {
-    this.baseURL = this.baseURL + this.removeSlash(controllerURL, true, true) + '/'
+    this.baseURL = this.baseURL + HttpService.removeSlash(controllerURL, true, true) + '/'
   }
 
-  get<T extends Object>(url: string, options?: Partial<HttpJsonBaseOptions>): Observable<T> {
+  protected get<T extends Object>(url: string, options?: Partial<HttpJsonBaseOptions>): Observable<T> {
     return this.httpClient.get(this.handleUrl(url), {
       ...options,
       responseType: 'json'
-    } as HttpJsonBaseOptions).pipe<T>(this.getCommonHttpPipe()) as Observable<T>;
+    } as HttpJsonBaseOptions).pipe<T>(HttpService.getCommonHttpPipe()) as Observable<T>;
   }
 
-  getBlob(url: string, options?: Partial<HttpBlobBaseOptions>): Observable<Blob> {
+  protected getBlob(url: string, options?: Partial<HttpBlobBaseOptions>): Observable<Blob> {
     return this.httpClient.get(this.handleUrl(url), {
       ...options,
       responseType: 'blob'
-    } as HttpBlobBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<Blob>;
+    } as HttpBlobBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<Blob>;
   }
 
-  getText(url: string, options?: Partial<HttpTextBaseOptions>): Observable<string> {
+  protected getText(url: string, options?: Partial<HttpTextBaseOptions>): Observable<string> {
     return this.httpClient.get(this.handleUrl(url), {
       ...options,
       responseType: 'text'
-    } as HttpTextBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<string>;
+    } as HttpTextBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<string>;
   }
 
-  getArrayBuffer(url: string, options?: Partial<HttpArrayBufferBaseOptions>): Observable<ArrayBuffer> {
+  protected getArrayBuffer(url: string, options?: Partial<HttpArrayBufferBaseOptions>): Observable<ArrayBuffer> {
     return this.httpClient.get(this.handleUrl(url), {
       ...options,
       responseType: 'arraybuffer'
-    } as HttpArrayBufferBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<ArrayBuffer>;
+    } as HttpArrayBufferBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<ArrayBuffer>;
   }
 
-  post<T extends Object, B>(url: string, body: B | null, options?: Partial<HttpJsonBaseOptions>): Observable<T> {
+  protected post<T extends Object, B>(url: string, body: B | null, options?: Partial<HttpJsonBaseOptions>): Observable<T> {
     return this.httpClient.post(this.handleUrl(url), body, {
       ...options,
       responseType: 'json'
-    } as HttpJsonBaseOptions).pipe<T>(this.getCommonHttpPipe()) as Observable<T>;
+    } as HttpJsonBaseOptions).pipe<T>(HttpService.getCommonHttpPipe()) as Observable<T>;
   }
 
-  postBlob<B>(url: string, body: B | null, options?: Partial<HttpBlobBaseOptions>): Observable<Blob> {
+  protected postBlob<B>(url: string, body: B | null, options?: Partial<HttpBlobBaseOptions>): Observable<Blob> {
     return this.httpClient.post(this.handleUrl(url), body, {
       ...options,
       responseType: 'blob'
-    } as HttpBlobBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<Blob>;
+    } as HttpBlobBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<Blob>;
   }
 
-  postText<B>(url: string, body: B | null, options?: Partial<HttpTextBaseOptions>): Observable<string> {
+  protected postText<B>(url: string, body: B | null, options?: Partial<HttpTextBaseOptions>): Observable<string> {
     return this.httpClient.post(this.handleUrl(url), body, {
       ...options,
       responseType: 'text'
-    } as HttpTextBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<string>;
+    } as HttpTextBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<string>;
   }
 
-  postArrayBuffer<B>(url: string, body: B | null, options?: Partial<HttpArrayBufferBaseOptions>): Observable<ArrayBuffer> {
+  protected postArrayBuffer<B>(url: string, body: B | null, options?: Partial<HttpArrayBufferBaseOptions>): Observable<ArrayBuffer> {
     return this.httpClient.post(this.handleUrl(url), body, {
       ...options,
       responseType: 'arraybuffer'
-    } as HttpArrayBufferBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<ArrayBuffer>;
+    } as HttpArrayBufferBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<ArrayBuffer>;
   }
 
-  put<T extends Object, B>(url: string, body: B | null, options?: Partial<HttpJsonBaseOptions>): Observable<T> {
+  protected put<T extends Object, B>(url: string, body: B | null, options?: Partial<HttpJsonBaseOptions>): Observable<T> {
     return this.httpClient.put(this.handleUrl(url), body, {
       ...options,
       responseType: 'json'
-    } as HttpJsonBaseOptions).pipe<T>(this.getCommonHttpPipe()) as Observable<T>;
+    } as HttpJsonBaseOptions).pipe<T>(HttpService.getCommonHttpPipe()) as Observable<T>;
   }
 
-  putBlob<B>(url: string, body: B | null, options?: Partial<HttpBlobBaseOptions>): Observable<Blob> {
+  protected putBlob<B>(url: string, body: B | null, options?: Partial<HttpBlobBaseOptions>): Observable<Blob> {
     return this.httpClient.put(this.handleUrl(url), body, {
       ...options,
       responseType: 'blob'
-    } as HttpBlobBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<Blob>;
+    } as HttpBlobBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<Blob>;
   }
 
-  putText<B>(url: string, body: B | null, options?: Partial<HttpTextBaseOptions>): Observable<string> {
+  protected putText<B>(url: string, body: B | null, options?: Partial<HttpTextBaseOptions>): Observable<string> {
     return this.httpClient.put(this.handleUrl(url), body, {
       ...options,
       responseType: 'text'
-    } as HttpTextBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<string>;
+    } as HttpTextBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<string>;
   }
 
-  putArrayBuffer<B>(url: string, body: B | null, options?: Partial<HttpArrayBufferBaseOptions>): Observable<ArrayBuffer> {
+  protected putArrayBuffer<B>(url: string, body: B | null, options?: Partial<HttpArrayBufferBaseOptions>): Observable<ArrayBuffer> {
     return this.httpClient.put(this.handleUrl(url), body, {
       ...options,
       responseType: 'arraybuffer'
-    } as HttpArrayBufferBaseOptions).pipe(this.getCommonHttpPipe()) as Observable<ArrayBuffer>;
+    } as HttpArrayBufferBaseOptions).pipe(HttpService.getCommonHttpPipe()) as Observable<ArrayBuffer>;
   }
 
-  delete<T extends Object, B>(url: string, options?: Partial<HttpJsonDeleteOptions<B>>): Observable<T> {
+  protected delete<T extends Object, B>(url: string, options?: Partial<HttpJsonDeleteOptions<B>>): Observable<T> {
     return this.httpClient.delete(this.handleUrl(url), {
       ...options,
       responseType: 'json'
-    } as HttpJsonDeleteOptions<B>).pipe<T>(this.getCommonHttpPipe()) as Observable<T>;
+    } as HttpJsonDeleteOptions<B>).pipe<T>(HttpService.getCommonHttpPipe()) as Observable<T>;
   }
 
-  deleteBlob<B>(url: string, options?: Partial<HttpBlobDeleteOptions<B>>): Observable<Blob> {
+  protected deleteBlob<B>(url: string, options?: Partial<HttpBlobDeleteOptions<B>>): Observable<Blob> {
     return this.httpClient.delete(this.handleUrl(url), {
       ...options,
       responseType: 'blob'
-    } as HttpBlobDeleteOptions<B>).pipe(this.getCommonHttpPipe()) as Observable<Blob>;
+    } as HttpBlobDeleteOptions<B>).pipe(HttpService.getCommonHttpPipe()) as Observable<Blob>;
   }
 
-  deleteArrayBuffer<B>(url: string, options?: Partial<HttpArrayBufferDeleteOptions<B>>): Observable<ArrayBuffer> {
+  protected deleteArrayBuffer<B>(url: string, options?: Partial<HttpArrayBufferDeleteOptions<B>>): Observable<ArrayBuffer> {
     return this.httpClient.delete(this.handleUrl(url), {
       ...options,
       responseType: 'arraybuffer'
-    } as HttpArrayBufferDeleteOptions<B>).pipe(this.getCommonHttpPipe()) as Observable<ArrayBuffer>;
+    } as HttpArrayBufferDeleteOptions<B>).pipe(HttpService.getCommonHttpPipe()) as Observable<ArrayBuffer>;
   }
 
-  deleteText<B>(url: string, options?: Partial<HttpTextDeleteOptions<B>>): Observable<string> {
+  protected deleteText<B>(url: string, options?: Partial<HttpTextDeleteOptions<B>>): Observable<string> {
     return this.httpClient.delete(this.handleUrl(url), {
       ...options,
       responseType: 'text'
-    } as HttpTextDeleteOptions<B>).pipe(this.getCommonHttpPipe()) as Observable<string>;
+    } as HttpTextDeleteOptions<B>).pipe(HttpService.getCommonHttpPipe()) as Observable<string>;
   }
 
-  private removeSlash(string: string, slashBefore: boolean, slashAfter: boolean): string {
+  private static removeSlash(string: string, slashBefore: boolean, slashAfter: boolean): string {
     if (slashBefore && string.charAt(0) == "/") string = string.substr(1);
     if (slashAfter && string.charAt(string.length - 1) == "/") string = string.substr(0, string.length - 1);
     return string;
   }
 
   private handleUrl(url: string): string {
-    return this.baseURL + this.removeSlash(url, true, false);
+    return this.baseURL + HttpService.removeSlash(url, true, false);
   }
 
-  private getCommonHttpPipe<T>(): OperatorFunction<Object, T> {
+  private static getCommonHttpPipe<T>(): OperatorFunction<Object, T> {
     return take<T>(1) as OperatorFunction<Object, T>
   }
 }

@@ -1,0 +1,55 @@
+:host {
+  display: block;
+
+  mat-list {
+    mat-list-item {
+      border-radius: 15px;
+      margin: 15px 0;
+      height: 30px;
+
+      &:nth-of-type(1) {
+        background: goldenrod;
+        color: black;
+        margin: 0 0 15px 0;
+      }
+
+      &:nth-of-type(2) {
+        background: silver;
+        color: black;
+      }
+
+      &:nth-of-type(3) {
+        background: #CD7F32;
+        color: black;
+      }
+
+      &:nth-of-type(n+4) {
+        margin: 5px 0;
+        border: #232324 1px solid;
+      }
+
+
+      ::ng-deep {
+        .mat-list-item-content {
+          justify-content: space-between;
+          align-items: center;
+          align-content: center;
+          flex-direction: row;
+          display: flex;
+
+          .right-part, .left-part {
+            flex-direction: row;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            align-content: center;
+          }
+
+          .rank-number, .rank-playername, .rank-propositions {
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+  }
+}

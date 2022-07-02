@@ -2,6 +2,11 @@
   display: block;
   height: 100%;
 
+  mat-tab-group {
+    height: 100%;
+    width: 100%;
+  }
+
   .main-flex-container {
     height: 100%;
 
@@ -38,7 +43,7 @@
       }
 
       .motus-lettre-mal-place {
-        background: RGBA(255,255,0,0.7) !important;
+        background: RGBA(255, 255, 0, 0.7) !important;
       }
 
       .motus-lettre-bien-place {
@@ -54,7 +59,7 @@
         }
 
         .motus-lettre-mal-place {
-          background: RGBA(150,150,0,0.7) !important;
+          background: RGBA(150, 150, 0, 0.7) !important;
         }
 
         .motus-lettre-bien-place {
@@ -64,8 +69,44 @@
     }
   }
 
-  .voir-resume-button {
+  .read-only-button {
     margin-top: 20px;
+  }
+
+
+  ::ng-deep {
+    .mat-tab-body-wrapper {
+      height: calc(100% - 49px);
+
+      .mat-tab-body-content {
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .leaderboard {
+          overflow: auto;
+          padding: 20px;
+          mat-card {
+            &.ranking {
+              margin-top: 20px;
+            }
+
+            &.ranking {
+              overflow: auto;
+            }
+          }
+        }
+
+        .options {
+          margin-top: 20px;
+        }
+      }
+    }
+
+    .mat-tab-labels {
+      justify-content: center;
+    }
   }
 
 }
