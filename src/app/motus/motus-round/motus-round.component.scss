@@ -118,4 +118,16 @@
     }
   }
 
+
+
+  @media screen and (max-width: 400px) {
+    ::ng-deep{
+      .enter-keyboard-text {
+        width: 0;
+        display: none;
+      }
+    }
+  }
+
+
 }

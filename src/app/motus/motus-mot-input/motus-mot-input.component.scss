@@ -10,7 +10,7 @@
       display: none;
     }
     .mot-input {
-      margin-right: 0px !important;
+      margin-right: 0 !important;
     }
   }
 
@@ -29,14 +29,14 @@
     }
   }
 
-  @media screen and (max-width: 600px) and (min-width: 231px) {
+  @media screen and (max-width: 600px) and (min-width: 281px) {
     input {
       font: 32px monospace;
       width: 32px;
     }
   }
 
-  @media screen and (max-width: 230px) {
+  @media screen and (max-width: 280px) {
     input {
       font: 24px monospace;
       width: 24px;
