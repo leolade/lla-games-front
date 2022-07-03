@@ -5,6 +5,48 @@
     width: 110px;
   }
 
+  .letters7, .letters8 {
+    @media screen and (max-width: 650px) {
+      button {
+        display: none;
+      }
+      .mot-input {
+        margin-right: 0 !important;
+      }
+    }
+    
+    @media screen and (max-width: 310px) {
+      input {
+        font: 24px monospace;
+        width: 24px;
+      }
+    }
+  }
+
+  
+  .letters10, .letters9 {
+    @media screen and (max-width: 700px) {
+      button {
+        display: none;
+      }
+      .mot-input {
+        margin-right: 0 !important;
+      }
+    }
+    @media screen and (max-width: 400px) {
+      input {
+        font: 24px monospace;
+        width: 24px;
+      }
+    }
+    @media screen and (max-width: 300px) {
+      input {
+        font: 16px monospace;
+        width: 16px;
+      }
+    }
+  }
+
   @media screen and (max-width: 500px) {
     button {
       display: none;

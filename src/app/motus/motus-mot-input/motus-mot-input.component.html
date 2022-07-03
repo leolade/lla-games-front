@@ -1,4 +1,4 @@
-<div class="fxFlexbox fxLayoutRow fxLayoutAlignCenterCenter fxLayoutGap20" appDarkMode>
+<div class="fxFlexbox fxLayoutRow fxLayoutAlignCenterCenter fxLayoutGap20" appDarkMode  [ngClass]="'letters' + motLengthAsArray.length">
   <button (click)="onResetClickHandler()" *ngIf="active" color="primary" mat-stroked-button>
     Réinitialiser
   </button>
