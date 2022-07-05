@@ -51,6 +51,21 @@
 
           .rank-number, .rank-playername, .rank-propositions {
             margin-right: 15px;
+
+            &.rank-playername {
+              mat-icon {
+                font-size: 14px;
+                height: 14px;
+                width: 14px;
+
+                &.color-green {
+                  color: green;
+                }
+                &.color-red {
+                  color: red;
+                }
+              }
+            }
           }
         }
       }

@@ -4,7 +4,11 @@
     [ngClass]="{'my-score': rank.me}">
     <div class="left-part">
       <div class="rank-number">{{i+1}}.</div>
-      <div class="rank-playername">{{rank.playerName|| 'Inconnu'}}</div>
+      <div class="rank-playername">{{rank.playerName|| 'Inconnu'}}
+        <mat-icon [matTooltip]="rank.success ? 'Réussi' : 'Echoué'"
+        [ngClass]="rank.success ? 'color-green' : 'color-red'">{{rank.success ? 'check_circle' : 'unpublished'}}
+        </mat-icon>
+      </div>
     </div>
       <div class="right-part">
         <div class="rank-propositions">{{rank.nbProposition}} essai{{rank.nbProposition > 1 ? 's' : ''}}</div>
