@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { DarkModeService } from "./core/dark-mode.service";
@@ -15,7 +15,7 @@ export class AppComponent {
 
   loader$: Observable<AppLoader<any> | null>;
   isProd: boolean = environment.production;
-  darkModeFC: FormControl = new FormControl(this.darkModeService.getDarkMode());
+  darkModeFC: UntypedFormControl = new UntypedFormControl(this.darkModeService.getDarkMode());
 
   constructor(private loaderService: LoaderService, private darkModeService: DarkModeService) {
     this.loader$ = this.loaderService.loader$;

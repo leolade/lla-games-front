@@ -8,7 +8,7 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Data } from '@angular/router';
 import { ConnectedUserDto } from 'lla-party-games-dto/dist/connected-user.dto';
@@ -55,7 +55,7 @@ export class MotusRoundComponent implements AfterViewInit, OnDestroy {
   validationsClassInitialised: string[][] = [];
   preFilledWordInitialised: string[] = [];
   readonly: boolean = false;
-  nameFC: FormControl = new FormControl();
+  nameFC: UntypedFormControl = new UntypedFormControl();
   selectedTabIndex: number = 0;
   saveUsernameDisabled: boolean = false;
   private roundSubject: BehaviorSubject<MotusRoundDto | null> = new BehaviorSubject<MotusRoundDto | null>(null);
