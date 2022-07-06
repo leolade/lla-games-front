@@ -8,7 +8,7 @@ Fonctionne avec un backend comme https://github.com/leolade/lla-games-api
 
 Prérequis
 ```
-  Installer Node12 
+  Installer Node14
  ```
 
 Clonez le projet
